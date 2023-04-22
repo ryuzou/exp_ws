@@ -91,6 +91,20 @@ namespace er_manual_node {
             msg_shoot_speed->canid = 0x201;
             _publisher_can->publish(*msg_shoot_speed);
         }
+        if (shoot_flag){
+            auto msg_shoot = std::make_shared<socketcan_interface_msg::msg::SocketcanIF>();
+            msg_shoot->canid = 0x311;
+            msg_shoot->candata[0] = 0xff;
+            msg_shoot->canid = 1;
+            _publisher_can->publish(*msg_shoot);
+        }
+        if (collect_flag){
+            auto msg_collect = std::make_shared<socketcan_interface_msg::msg::SocketcanIF>();
+            msg_collect->canid = 0x321;
+            msg_collect->candata[0] = 0xff;
+            msg_collect->canid = 1;
+            _publisher_can->publish(*msg_collect);
+        }
         //RCLCPP_INFO(this->get_logger(), "x:%f, y:%f, rad:%f", x_val, y_val, rad);
         auto msg = std::make_shared<geometry_msgs::msg::Twist>();
         msg->linear.x = x_val;
