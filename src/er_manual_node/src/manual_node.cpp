@@ -31,6 +31,9 @@ namespace er_manual_node {
         manual_instruction["x"] = 0;
         manual_instruction["y"] = 0;
         manual_instruction["rad"] = 0;
+        manual_instruction["preset"] = -1;
+        manual_instruction["collect_flag"] = 0;
+        manual_instruction["shoot_flag"] = 0;
         while (!client_->wait_for_service(1s)){
             if(!rclcpp::ok()){
                 RCLCPP_ERROR(this->get_logger(), "Manual Node Client interrupted while waiting for TCP service");
@@ -81,6 +84,7 @@ namespace er_manual_node {
         int collect_flag = manual_instruction["collect_flag"];
         int shoot_flag = manual_instruction["shoot_flag"];
         if (preset_index != -1){
+            RCLCPP_INFO(this->get_logger(), "index:%d", preset_index);
             auto msg_angle = std::make_shared<std_msgs::msg::Float32>();
             msg_angle->data = preset[preset_index][0];
             _publisher_angle->publish(*msg_angle);
@@ -91,18 +95,18 @@ namespace er_manual_node {
             msg_shoot_speed->canid = 0x201;
             _publisher_can->publish(*msg_shoot_speed);
         }
-        if (shoot_flag){
+        if (shoot_flag == 1){
             auto msg_shoot = std::make_shared<socketcan_interface_msg::msg::SocketcanIF>();
             msg_shoot->canid = 0x311;
             msg_shoot->candata[0] = 0xff;
-            msg_shoot->canid = 1;
+            msg_shoot->candlc = 1;
             _publisher_can->publish(*msg_shoot);
         }
-        if (collect_flag){
+        if (collect_flag == 1){
             auto msg_collect = std::make_shared<socketcan_interface_msg::msg::SocketcanIF>();
             msg_collect->canid = 0x321;
             msg_collect->candata[0] = 0xff;
-            msg_collect->canid = 1;
+            msg_collect->candlc = 1;
             _publisher_can->publish(*msg_collect);
         }
         //RCLCPP_INFO(this->get_logger(), "x:%f, y:%f, rad:%f", x_val, y_val, rad);
@@ -110,6 +114,7 @@ namespace er_manual_node {
         msg->linear.x = x_val;
         msg->linear.y = y_val;
         msg->angular.z = rad;
+//        RCLCPP_INFO(this->get_logger(), "x:%f, y:%f", x_val, y_val);
         _publisher_cmd_vel->publish(*msg);
     }
 

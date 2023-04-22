@@ -68,6 +68,7 @@ namespace socketcan_interface {
             return;
         }
 
+
         struct canfd_frame frame{};
 
         frame.can_id = msg.canid;
@@ -84,7 +85,7 @@ namespace socketcan_interface {
             sprintf(str, "0x%03X, ", msg.candata[i]);
             can_data_print = can_data_print + str;
         }
-        //RCLCPP_INFO(this->get_logger(), "Sending to can bus ID: 0x%03X, can data: %s", msg.canid, can_data_print.c_str());
+//        RCLCPP_INFO(this->get_logger(), "Sending to can bus ID: 0x%03X, can data: %s", msg.canid, can_data_print.c_str());
 
         if (write(s, &frame, sizeof(struct canfd_frame)) != sizeof(struct canfd_frame)) {
             perror("Write frame0");
