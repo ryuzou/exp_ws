@@ -14,6 +14,7 @@ ament_auto_add_library(rr_manual_node_component SHARED
         src/manual_node.cpp)
 
 
+
 rclcpp_components_register_node(rr_manual_node_component
         PLUGIN "rr_manual_node::RRManualNode"
         EXECUTABLE rr_manual_node_exec)

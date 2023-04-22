@@ -10,9 +10,9 @@ def generate_launch_description():
 
     # Nodeの定義
     node = Node(
-        name='er_manual_node',
-        namespace='er_manual_node',
-        package='er_manual_node',
+        name='rr_manual_node',
+        namespace='rr_manual_node',
+        package='rr_manual_node',
         executable='rr_manual_node_exec',
         output='screen'
     )

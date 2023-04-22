@@ -12,8 +12,6 @@ find_package(rclcpp REQUIRED)
 find_package(ament_lint_common)
 find_package(ament_lint_auto)
 
-include_directories(json/include)
-
 include_directories(include)
 
 add_library(${PROJECT_NAME}
@@ -22,6 +20,9 @@ add_library(${PROJECT_NAME}
         include/utilities/can_utils.hpp
         include/utilities/utilities.hpp
         )
+
+find_package(nlohmann_json 3.2.0 REQUIRED)
+add_library(nlohmann_json SHARED IMPORTED)
 
 target_include_directories(utilities PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

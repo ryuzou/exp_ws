@@ -30,6 +30,10 @@ namespace rr_manual_node {
         manual_instruction["x"] = 0;
         manual_instruction["y"] = 0;
         manual_instruction["rad"] = 0;
+        manual_instruction["preset"] = -1;
+        manual_instruction["collect_flag"] = 0;
+        manual_instruction["shoot_flag"] = 0;
+        manual_instruction["reset"] = 0;
         while (!client_->wait_for_service(1s)){
             if(!rclcpp::ok()){
                 RCLCPP_ERROR(this->get_logger(), "Manual Node Client interrupted while waiting for TCP service");
@@ -74,10 +78,17 @@ namespace rr_manual_node {
         float x_val = manual_instruction["x"];
         float y_val = manual_instruction["y"];
         float rad = manual_instruction["rad"];
-        float angle = manual_instruction["angle"];
         int _preset_index = manual_instruction["preset"];
         int collect_flag = manual_instruction["collect_flag"];
         int shoot_flag = manual_instruction["shoot_flag"];
+        int reset = manual_instruction["reset"];
+        if (reset == 1){
+            auto msg_reset = std::make_shared<socketcan_interface_msg::msg::SocketcanIF>();
+            msg_reset->canid = 0x051;
+            msg_reset->candata[0] = 0xff;
+            msg_reset->candlc = 1;
+            _publisher_can->publish(*msg_reset);
+        }
         if (_preset_index != -1){
             preset_index = _preset_index;
         }

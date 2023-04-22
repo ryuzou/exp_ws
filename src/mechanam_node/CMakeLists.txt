@@ -15,7 +15,7 @@ ament_auto_add_library(mechanam_node_component SHARED
 
 rclcpp_components_register_node(mechanam_node_component
         PLUGIN "mechanam_node::MechanamNode"
-        EXECUTABLE rr_mechanam_node_node_exec)
+        EXECUTABLE mechanam_node_exec)
 
 
 
@@ -23,6 +23,11 @@ install(TARGETS
         mechanam_node_component
         DESTINATION lib/${PROJECT_NAME}
         LIBRARY DESTINATION lib)
+
+install(
+        DIRECTORY launch
+        DESTINATION share/${PROJECT_NAME}
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

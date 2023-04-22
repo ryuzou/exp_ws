@@ -14,6 +14,7 @@ ament_auto_add_library(er_angle_node_component SHARED
         src/er_angle_node.cpp)
 
 
+
 rclcpp_components_register_node(er_angle_node_component
         PLUGIN "er_angle_node::ERAngleNode"
         EXECUTABLE er_angle_node_exec)

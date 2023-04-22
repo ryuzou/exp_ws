@@ -14,6 +14,7 @@ ament_auto_add_library(stear_node_component SHARED
         src/stear_node.cpp)
 
 
+
 rclcpp_components_register_node(stear_node_component
         PLUGIN "stear_node::StearNode"
         EXECUTABLE stear_node_exec)
