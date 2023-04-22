@@ -25,14 +25,14 @@ namespace mechanam_node {
                 [this] { _publisher_callback(); }
         );
         _subscription = this->create_subscription<geometry_msgs::msg::Twist>(
-                "cmd_vel",
+                "/cmd_vel",
                 _qos,
                 std::bind(&MechanamNode::_subscriber_callback, this,  std::placeholders::_1));
     }
 
     void MechanamNode::_subscriber_callback(geometry_msgs::msg::Twist msg) {
         float x_val = msg.linear.x;
-        float y_val = msg.linear.x;
+        float y_val = msg.linear.y;
         float theta = msg.angular.z;
         float v1 = -1 * x_val + 1 * y_val;
         float v2 = 1 * x_val + 1 * y_val;

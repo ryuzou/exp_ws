@@ -103,7 +103,7 @@ namespace rr_manual_node {
             auto msg_collect = std::make_shared<socketcan_interface_msg::msg::SocketcanIF>();
             msg_collect->canid = 0x323;
             msg_collect->candata[0] = 0x02;
-            msg_collect->canid = 1;
+            msg_collect->candlc = 1;
             _publisher_can->publish(*msg_collect);
         }
         //RCLCPP_INFO(this->get_logger(), "x:%f, y:%f, rad:%f", x_val, y_val, rad);
