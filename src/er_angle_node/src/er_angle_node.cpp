@@ -85,6 +85,7 @@ namespace er_angle_node {
             }
             _publisher->publish(*msg);
         }
+        send_flag = false;
     }
 
     float ERAngleNode::takoushiki(float x) {

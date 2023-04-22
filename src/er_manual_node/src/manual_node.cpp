@@ -84,7 +84,6 @@ namespace er_manual_node {
         int collect_flag = manual_instruction["collect_flag"];
         int shoot_flag = manual_instruction["shoot_flag"];
         if (preset_index != -1){
-            RCLCPP_INFO(this->get_logger(), "index:%d", preset_index);
             auto msg_angle = std::make_shared<std_msgs::msg::Float32>();
             msg_angle->data = preset[preset_index][0];
             _publisher_angle->publish(*msg_angle);
