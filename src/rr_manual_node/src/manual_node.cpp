@@ -75,27 +75,23 @@ namespace rr_manual_node {
         float y_val = manual_instruction["y"];
         float rad = manual_instruction["rad"];
         float angle = manual_instruction["angle"];
-        int preset_index = manual_instruction["preset"];
+        int _preset_index = manual_instruction["preset"];
         int collect_flag = manual_instruction["collect_flag"];
         int shoot_flag = manual_instruction["shoot_flag"];
-        if (preset_index != -1){
+        if (_preset_index != -1){
+            preset_index = _preset_index;
+        }
+        if (shoot_flag){
             auto msg_shoot_speed = std::make_shared<socketcan_interface_msg::msg::SocketcanIF>();
             convert_float_to_byte(preset[preset_index], reinterpret_cast<uint8_t (&)[4]>(msg_shoot_speed->candata));
             msg_shoot_speed->candlc = 4;
-            msg_shoot_speed->canid = 0x201;
+            msg_shoot_speed->canid = 0x202;
             _publisher_can->publish(*msg_shoot_speed);
-        }
-        if (shoot_flag){
-            auto msg_shoot = std::make_shared<socketcan_interface_msg::msg::SocketcanIF>();
-            msg_shoot->canid = 0x311;
-            msg_shoot->candata[0] = 0xff;
-            msg_shoot->canid = 1;
-            _publisher_can->publish(*msg_shoot);
         }
         if (collect_flag){
             auto msg_collect = std::make_shared<socketcan_interface_msg::msg::SocketcanIF>();
-            msg_collect->canid = 0x321;
-            msg_collect->candata[0] = 0xff;
+            msg_collect->canid = 0x323;
+            msg_collect->candata[0] = 0x02;
             msg_collect->canid = 1;
             _publisher_can->publish(*msg_collect);
         }

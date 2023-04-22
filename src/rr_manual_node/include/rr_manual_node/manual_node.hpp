@@ -33,6 +33,7 @@ namespace rr_manual_node {
         bool tcp8011_flag;
         json manual_instruction;
         float preset[4] = {1000, 1000, 1000, 1000};
+        int preset_index = -1;
 
         rclcpp::QoS _qos = rclcpp::QoS(10);
         void _publisher_callback();
