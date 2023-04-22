@@ -25,7 +25,6 @@ namespace rr_manual_node {
         declare_parameter("interval_ms", 10);
         interval_ms = this->get_parameter("interval_ms").as_int();
         _publisher_cmd_vel = this->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", _qos);
-        _publisher_angle = this->create_publisher<std_msgs::msg::Float32>("/er_angle", _qos);
         _publisher_can = this->create_publisher<socketcan_interface_msg::msg::SocketcanIF>("/can_tx", _qos);
         client_ = this->create_client<tcp_socket_msg::srv::TcpSocketICtrl>("/tcp_interface/tcp_register");
         manual_instruction["x"] = 0;
@@ -54,8 +53,6 @@ namespace rr_manual_node {
                 std::chrono::milliseconds(interval_ms),
                 [this] { _publisher_callback(); }
                 );
-
-        previous_angle = 0;
     }
 
     void RRManualNode::_subscriber_callback_tcp_8011(std_msgs::msg::String msg) {
@@ -78,10 +75,29 @@ namespace rr_manual_node {
         float y_val = manual_instruction["y"];
         float rad = manual_instruction["rad"];
         float angle = manual_instruction["angle"];
-        if (!(previous_angle == angle)){
-            auto msg_angle = std::make_shared<std_msgs::msg::Float32>();
-            msg_angle->data = angle;
-            _publisher_angle->publish(*msg_angle);
+        int preset_index = manual_instruction["preset"];
+        int collect_flag = manual_instruction["collect_flag"];
+        int shoot_flag = manual_instruction["shoot_flag"];
+        if (preset_index != -1){
+            auto msg_shoot_speed = std::make_shared<socketcan_interface_msg::msg::SocketcanIF>();
+            convert_float_to_byte(preset[preset_index], reinterpret_cast<uint8_t (&)[4]>(msg_shoot_speed->candata));
+            msg_shoot_speed->candlc = 4;
+            msg_shoot_speed->canid = 0x201;
+            _publisher_can->publish(*msg_shoot_speed);
+        }
+        if (shoot_flag){
+            auto msg_shoot = std::make_shared<socketcan_interface_msg::msg::SocketcanIF>();
+            msg_shoot->canid = 0x311;
+            msg_shoot->candata[0] = 0xff;
+            msg_shoot->canid = 1;
+            _publisher_can->publish(*msg_shoot);
+        }
+        if (collect_flag){
+            auto msg_collect = std::make_shared<socketcan_interface_msg::msg::SocketcanIF>();
+            msg_collect->canid = 0x321;
+            msg_collect->candata[0] = 0xff;
+            msg_collect->canid = 1;
+            _publisher_can->publish(*msg_collect);
         }
         //RCLCPP_INFO(this->get_logger(), "x:%f, y:%f, rad:%f", x_val, y_val, rad);
         auto msg = std::make_shared<geometry_msgs::msg::Twist>();

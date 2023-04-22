@@ -27,13 +27,12 @@ namespace rr_manual_node {
 
         rclcpp::Subscription<std_msgs::msg::String>::SharedPtr _subscription_tcp_8011;
         rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr _publisher_cmd_vel;
-        rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr _publisher_angle;
         rclcpp::Publisher<socketcan_interface_msg::msg::SocketcanIF>::SharedPtr _publisher_can;
         rclcpp::TimerBase::SharedPtr _pub_timer;
 
         bool tcp8011_flag;
         json manual_instruction;
-        float previous_angle;
+        float preset[4] = {1000, 1000, 1000, 1000};
 
         rclcpp::QoS _qos = rclcpp::QoS(10);
         void _publisher_callback();

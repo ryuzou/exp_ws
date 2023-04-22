@@ -86,7 +86,7 @@ namespace er_angle_node {
     void ERAngleNode::_publisher_callback() {
         if (send_flag){
             auto msg = std::make_shared<socketcan_interface_msg::msg::SocketcanIF>();
-            msg->canid = 0x101;
+            msg->canid = 0x301;
             msg->candlc = 4;
             for (int i = 0; i < 4; ++i) {
                 msg->candata[i] = send_bytes[i];
